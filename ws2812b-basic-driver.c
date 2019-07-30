@@ -59,8 +59,13 @@ void LED_STRIP_Init(void)
 			    	         "nop;nop;nop;nop;nop;nop;nop;nop;nop;nop;" \
 			    	         "nop;nop;nop;nop;nop;nop;nop;nop;nop;nop;" \
 			    	         "nop;nop;nop;nop;nop;nop;nop;nop;nop;nop;")
-#elif defined(TARGET_CORE2)
-
+#elif defined(TARGET_CORE2) // 168Mhz
+    #define DELAY_T1H() delay_loop(24)
+    #define DELAY_T1L() delay_loop(11)  
+    #define DELAY_T1LL() delay_loop(10) 
+    #define DELAY_T0H() delay_loop(11)
+    #define DELAY_T0L() delay_loop(23)
+    #define DELAY_T0LL() delay_loop(22)
 #else
     #error "ws2812b-basic-driver: this target is not supported!"
 #endif
@@ -119,6 +124,7 @@ void drawFrame(void)
     uint8_t critical_interrupts_enabled = ((__get_PRIMASK() & 0x1) == 0);
     if(critical_interrupts_enabled)
 	    __disable_irq();
+    delay_loop(1);
 	while(1)
 	{
         if(bit_mask & *data)
